@@ -22,7 +22,7 @@
         shell: /bin/bash
     - name: Set authorized key took from file
       vars:
-        - key_path: "{{ user_key | default(lookup('env', 'ANSIBLE_PUB_KEY') }}"
+        - key_path: "{{ user_key | default(lookup('env', 'ANSIBLE_PUB_KEY')) }}"
       authorized_key:
         user: '{{ user_name }}'
         state: present
