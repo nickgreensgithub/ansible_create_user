@@ -1,0 +1,28 @@
+---
+
+- hosts: all
+  become: true
+  vars:
+    pub_key_to_add: "{{ user_key | lookup('env', 'ANSIBLE_PUB_KEY') }}"
+    password_to_add: "{{ lookup('env', 'ANSIBLE_DEFAULT_PASSWORD') }}" #TODO pass in from vault or something more secure
+    user_name: "{{ username | 'ansible' }}" #TODO pass in from vault or something more secure
+  tasks:
+    - name: Create group
+      group: #TODO make configurable
+        name: "deployment"
+        state: present
+
+    - name: Add the user
+      ansible.builtin.user:
+        name: '{{ user_name }}'
+        groups: # TODO make configurable
+          - deployment
+          - sudo
+        password: "{{ password_to_add | password_hash('sha512') }}"
+        update_password: on_create
+        shell: /bin/bash
+    - name: Set authorized key took from file
+      authorized_key:
+        user: '{{ user_name }}'
+        state: present
+        key: "{{ lookup('file', pub_key_to_add ) }}"
