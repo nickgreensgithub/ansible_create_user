@@ -1,0 +1,1 @@
+Used as a submodule for terraform repos to create a users after infrastructure initialisation, primarily for other tools to use
