@@ -20,7 +20,7 @@
         password: "{{ password_to_add | password_hash('sha512') }}"
         update_password: on_create
         shell: /bin/bash
-    - name: Set authorized key took from file
+    - name: Set authorized public key
       vars:
         - key_path: "{{ user_key | default(lookup('env', 'ANSIBLE_PUB_KEY')) }}"
       authorized_key:
