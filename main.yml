@@ -4,7 +4,7 @@
   become: true
   vars:
     pub_key_to_add: "{{ user_key | default(lookup('env', 'ANSIBLE_PUB_KEY')) }}"
-    password_to_add: "{{ lookup('env', 'ANSIBLE_DEFAULT_PASSWORD') }}" #TODO pass in from vault or something more secure
+    password_to_add: "{{ user_password | default(lookup('env', 'ANSIBLE_DEFAULT_PASSWORD')) }}" #TODO pass in from vault or something more secure
     user_name: "{{ username | default('ansible') }}"
 
   tasks:
@@ -27,4 +27,4 @@
       authorized_key:
         user: '{{ user_name }}'
         state: present
-        key: "{{ lookup('file', pub_key_to_add ) }}"
+        key: "{{ pub_key_to_add }}"
