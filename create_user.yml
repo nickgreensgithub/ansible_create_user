@@ -3,7 +3,7 @@
 - hosts: all
   become: true
   vars:
-    password_to_add: "{{ lookup('env', 'ANSIBLE_DEFAULT_PASSWORD') }}" #TODO pass in from vault or something more secure
+    password_to_add: "{{ user_password | lookup('env', 'ANSIBLE_DEFAULT_PASSWORD') }}" #TODO pass in from vault or something more secure
     user_name: "{{ username | default('ansible') }}" #TODO pass in from vault or something more secure
   tasks:
     - name: Create group
@@ -22,8 +22,8 @@
         shell: /bin/bash
     - name: Set authorized public key
       vars:
-        - key_path: "{{ user_key | default(lookup('env', 'ANSIBLE_PUB_KEY')) }}"
+        - priv_key: "{{ user_key | default(lookup('env', 'ANSIBLE_PUB_KEY')) }}"
       authorized_key:
         user: '{{ user_name }}'
         state: present
-        key: "{{ lookup('file', key_path ) }}"
+        key: "{{ priv_key }}"
